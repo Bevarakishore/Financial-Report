@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#09090c">
+    <title>Financial Report — Finance, in focus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js" defer></script>
+    <script src="three-scene.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell hidden" id="app-shell">
+      <canvas class="dashboard-visualization" id="dashboard-visualization" aria-hidden="true"></canvas>
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Financial Report home">
+          <span class="brand-mark"><svg class="brand-fallback" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 26.5h22" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><rect x="7" y="17" width="4" height="8" rx="1" fill="currentColor"/><rect x="14" y="12" width="4" height="13" rx="1" fill="currentColor"/><rect x="21" y="7" width="4" height="18" rx="1" fill="currentColor"/><path d="m8 14 7-5 6 1 5-5" fill="none" stroke="var(--surface)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><canvas class="brand-scene" data-three-logo aria-hidden="true"></canvas></span>
+          <span>Financial Report<span class="brand-period">.</span></span>
+        </a>
+        <div class="side-label">WORKSPACE</div>
+        <nav class="side-nav" aria-label="Main navigation">
+          <a href="#overview" class="nav-link active" data-section="overview"><span class="nav-icon">◫</span>Overview</a>
+          <a href="#transactions" class="nav-link" data-section="transactions"><span class="nav-icon">⇄</span>Transactions</a>
+          <a href="#budgets" class="nav-link" data-section="budgets"><span class="nav-icon">◷</span>Budgets <span class="nav-badge" id="budget-nav-count"></span></a>
+          <a href="#recurring" class="nav-link" data-section="recurring"><span class="nav-icon">↻</span>Recurring</a>
+          <a href="#reports" class="nav-link" data-section="reports"><span class="nav-icon">▥</span>Reports</a>
+        </nav>
+        <div class="side-bottom">
+          <div class="side-tip"><span class="tip-spark">✳</span><p><strong>A little insight goes a long way.</strong><br>Small habits make a big difference.</p></div>
+          <button class="profile-button" id="profile-button" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar" id="profile-avatar">A</span>
+            <span class="profile-copy"><strong id="profile-name">Alex Morgan</strong><small id="profile-email">Demo workspace</small></span>
+            <span class="profile-more">···</span>
+          </button>
+          <div class="profile-menu hidden" id="profile-menu"><button id="auth-action">Sign in / create account</button><button id="logout-action">Log out</button></div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="overview">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark"><svg class="brand-fallback" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 26.5h22" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><rect x="7" y="17" width="4" height="8" rx="1" fill="currentColor"/><rect x="14" y="12" width="4" height="13" rx="1" fill="currentColor"/><rect x="21" y="7" width="4" height="18" rx="1" fill="currentColor"/><path d="m8 14 7-5 6 1 5-5" fill="none" stroke="var(--surface)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><canvas class="brand-scene" data-three-logo aria-hidden="true"></canvas></span>Financial Report<span class="brand-period">.</span></div>
+          <div class="breadcrumb">Workspace <span>/</span> <strong>Overview</strong></div>
+          <div class="top-actions">
+            <button class="icon-button theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" title="Toggle color theme"><span id="theme-icon">☾</span></button>
+            <button class="date-chip" id="month-label" aria-label="Current month"></button>
+            <button class="mobile-menu icon-button" id="mobile-menu" aria-label="Open navigation">☰</button>
+          </div>
+        </header>
+
+        <div class="page-wrap">
+          <section class="welcome-row">
+            <div><div class="eyebrow"><span class="live-dot"></span> YOUR MONEY, AT A GLANCE</div><h1>Good morning, <span id="welcome-name">Alex</span><span class="wave">✳</span></h1><p class="page-subtitle">Here's what's happening with your finances.</p></div>
+            <button class="button button-primary" id="add-transaction"><span class="plus">＋</span> Add transaction</button>
+          </section>
+
+          <section class="stats-grid" aria-label="Financial summary">
+            <article class="stat-card balance-card"><div class="stat-top"><span>Total balance</span><span class="stat-icon balance-icon">⌁</span></div><div class="stat-value" id="total-balance">$0.00</div><div class="stat-foot"><span class="trend-chip positive" id="balance-trend">↗ 0%</span><span>vs. last month</span></div><canvas class="balance-scene" id="balance-scene" aria-hidden="true"></canvas><div class="balance-decoration"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Income</span><span class="stat-icon income-icon">↙</span></div><div class="stat-value" id="month-income">$0.00</div><div class="stat-foot"><span class="trend-chip positive" id="income-trend">↗ 0%</span><span>vs. last month</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Expenses</span><span class="stat-icon expense-icon">↗</span></div><div class="stat-value" id="month-expenses">$0.00</div><div class="stat-foot"><span class="trend-chip neutral" id="expense-trend">— 0%</span><span>vs. last month</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Savings rate</span><span class="stat-icon savings-icon">✳</span></div><div class="stat-value" id="savings-rate">0%</div><div class="stat-foot"><span class="trend-chip positive" id="savings-trend">Looking good</span><span>of your income</span></div></article>
+          </section>
+
+          <section class="content-grid">
+            <article class="panel chart-panel" id="reports">
+              <div class="panel-heading"><div><h2>Cash flow</h2><p>Income vs. expenses over time</p></div><label class="select-wrap"><span class="sr-only">Chart period</span><select id="chart-period"><option value="6">Last 6 months</option><option value="12">Last 12 months</option></select><span>⌄</span></label></div>
+              <div class="chart-legend"><span><i class="legend-dot income-dot"></i>Income</span><span><i class="legend-dot expense-dot"></i>Expenses</span></div>
+              <div class="chart-container"><canvas id="cashflow-chart" aria-label="Monthly income and expense chart"></canvas><div class="chart-tooltip hidden" id="chart-tooltip"></div></div>
+            </article>
+            <article class="panel spending-panel">
+              <div class="panel-heading"><div><h2>Spending by category</h2><p>Where your money goes</p></div><button class="text-button" id="category-period">This month <span>⌄</span></button></div>
+              <div class="donut-wrap"><canvas id="category-chart" aria-label="Expense breakdown by category"></canvas><div class="donut-center"><strong id="donut-total">$0</strong><span>spent this month</span></div></div>
+              <div class="category-legend" id="category-legend"></div>
+            </article>
+          </section>
+
+          <section class="analytics-grid" aria-label="Spending trends and analysis">
+            <article class="panel trend-panel">
+              <div class="panel-heading"><div><h2>Monthly spending trend</h2><p>Expense totals over time</p></div><span class="trend-caption" id="trend-period-label">Last 6 months</span></div>
+              <div class="trend-chart-container"><canvas id="expense-trend-chart" aria-label="Line chart of monthly expenses"></canvas></div>
+            </article>
+            <article class="panel comparison-panel">
+              <div class="panel-heading"><div><h2>Month-on-month</h2><p>Expense comparison</p></div><span class="comparison-icon">↕</span></div>
+              <div class="comparison-values"><div><span>This month</span><strong id="comparison-current">$0</strong></div><span class="comparison-arrow">→</span><div><span>Last month</span><strong id="comparison-previous">$0</strong></div></div>
+              <div class="comparison-change" id="comparison-change"></div>
+              <div class="ranking-heading">HIGHEST-SPENDING CATEGORIES</div>
+              <div class="category-ranking" id="category-ranking"></div>
+            </article>
+          </section>
+
+          <section class="content-grid lower-grid">
+            <article class="panel transactions-panel" id="transactions">
+              <div class="panel-heading transaction-heading"><div><h2>Recent transactions</h2><p>Your latest money moves</p></div><button class="text-button" id="view-all">View all <span>→</span></button></div>
+              <div class="filters">
+                <label class="search-box"><span>⌕</span><input id="search-filter" type="search" placeholder="Search transactions"></label>
+                <select id="type-filter" aria-label="Filter by transaction type"><option value="all">All types</option><option value="income">Income</option><option value="expense">Expenses</option></select>
+                <select id="category-filter" aria-label="Filter by category"><option value="all">All categories</option></select>
+                <button class="filter-toggle" id="advanced-filter-toggle" aria-expanded="false">Filters <span>☷</span></button>
+              </div>
+              <div class="advanced-filters hidden" id="advanced-filters">
+                <label>From<input type="date" id="date-from"></label><label>To<input type="date" id="date-to"></label>
+                <label>Min amount<input type="number" id="amount-min" min="0" step="0.01" placeholder="0.00"></label>
+                <label>Max amount<input type="number" id="amount-max" min="0" step="0.01" placeholder="Any"></label>
+                <button class="text-button" id="clear-filters">Clear filters</button>
+              </div>
+              <div class="transaction-table-wrap"><table class="transaction-table"><thead><tr><th>TRANSACTION</th><th>DATE</th><th>CATEGORY</th><th>AMOUNT</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="transaction-list"></tbody></table><div class="empty-state hidden" id="empty-transactions"><span>◌</span><strong>No transactions found</strong><p>Try adjusting your filters or add a transaction.</p></div></div>
+              <div class="table-footer"><span id="transaction-count">Showing 0 transactions</span><button class="text-button" id="export-csv">Export CSV <span>↓</span></button></div>
+            </article>
+
+            <div class="right-column">
+              <article class="panel budget-panel" id="budgets">
+                <div class="panel-heading"><div><h2>Monthly budgets</h2><p>A plan for your spending</p></div><button class="small-icon-button" id="edit-budgets" aria-label="Edit budgets" title="Edit budgets">✎</button></div>
+                <div class="monthly-budget-summary"><div><span>Overall budget</span><strong id="monthly-budget-values">$0 / $0</strong></div><div class="progress-track" role="progressbar" id="monthly-budget-progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Monthly budget usage"><div class="progress-fill" id="monthly-budget-fill"></div></div><div class="monthly-budget-remaining"><span id="monthly-budget-status">Remaining</span><strong id="monthly-budget-remaining">$0</strong></div></div>
+                <div class="budget-list" id="budget-list"></div>
+                <div class="budget-alert hidden" id="budget-alert"><span>⚑</span><div><strong>Budget check-in</strong><p id="budget-alert-copy"></p></div></div>
+              </article>
+              <article class="panel goals-panel" id="goals">
+                <div class="panel-heading"><div><h2>Savings goals</h2><p>Small steps toward big plans</p></div><button class="small-icon-button" id="add-goal" aria-label="Add savings goal" title="Add savings goal">＋</button></div>
+                <div class="goal-list" id="goal-list"></div>
+              </article>
+              <article class="panel recurring-panel" id="recurring">
+                <div class="panel-heading"><div><h2>Coming up</h2><p>Monthly bills & subscriptions</p></div><button class="small-icon-button" id="add-recurring" aria-label="Add recurring bill" title="Add recurring bill">＋</button></div>
+                <div class="recurring-list" id="recurring-list"></div>
+                <div class="recurring-total"><span>Expected this month</span><strong id="recurring-total">$0.00</strong></div>
+              </article>
+              <article class="insight-card"><span class="insight-spark">✳</span><div><span class="eyebrow">YOUR MONTHLY INSIGHT</span><p id="insight-copy">Add a few transactions to uncover a spending insight.</p></div></article>
+            </div>
+          </section>
+          <footer class="page-footer">Your finances, in focus. <span>Data is saved in this browser.</span></footer>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="transaction-modal" role="dialog" aria-modal="true" aria-labelledby="transaction-modal-title">
+      <form class="modal-card" id="transaction-form">
+        <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button><div class="eyebrow">MONEY IN MOTION</div><h2 id="transaction-modal-title">Add transaction</h2><p class="modal-intro">Keep your financial picture up to date.</p>
+        <input type="hidden" id="transaction-id">
+        <div class="form-row"><label>Type<select id="transaction-type"><option value="expense">Expense</option><option value="income">Income</option></select></label><label>Amount<input id="transaction-amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></label></div>
+        <label>Description<input id="transaction-description" type="text" maxlength="64" placeholder="e.g. Weekly groceries" required></label>
+        <div class="form-row"><label>Category<select id="transaction-category" required></select></label><label>Date<input id="transaction-date" type="date" required></label></div>
+        <label>Note <span class="optional">(optional)</span><input id="transaction-note" type="text" maxlength="120" placeholder="Add a note"></label>
+        <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save transaction</button></div>
+      </form>
+    </div>
+
+    <div class="modal-backdrop hidden" id="budget-modal" role="dialog" aria-modal="true" aria-labelledby="budget-modal-title">
+      <form class="modal-card" id="budget-form">
+        <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button><div class="eyebrow">MAKE A PLAN FOR YOUR MONEY</div><h2 id="budget-modal-title">Set a budget</h2><p class="modal-intro">Choose an overall monthly limit or a category-specific budget.</p>
+        <label>Budget type<select id="budget-type"><option value="monthly">Overall monthly</option><option value="category">Category</option></select></label>
+        <label class="hidden" id="budget-category-field">Category<select id="budget-category"></select></label>
+        <label>Monthly limit<input id="budget-amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></label>
+        <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save budget</button></div>
+      </form>
+    </div>
+
+    <div class="modal-backdrop hidden" id="goal-modal" role="dialog" aria-modal="true" aria-labelledby="goal-modal-title">
+      <form class="modal-card" id="goal-form">
+        <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button><div class="eyebrow">A LITTLE CLOSER EVERY MONTH</div><h2 id="goal-modal-title">Create a savings goal</h2><p class="modal-intro">Set a target and deadline to get a monthly savings plan.</p>
+        <input type="hidden" id="goal-id">
+        <label>Goal name<input id="goal-name" type="text" maxlength="50" placeholder="e.g. New laptop" required></label>
+        <div class="form-row"><label>Target amount<input id="goal-target" type="number" min="0.01" step="0.01" placeholder="0.00" required></label><label>Already saved<input id="goal-saved" type="number" min="0" step="0.01" value="0" required></label></div>
+        <label>Target date<input id="goal-deadline" type="date" required></label>
+        <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save goal</button></div>
+      </form>
+    </div>
+
+    <div class="modal-backdrop hidden" id="recurring-modal" role="dialog" aria-modal="true" aria-labelledby="recurring-modal-title">
+      <form class="modal-card" id="recurring-form">
+        <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button><div class="eyebrow">NEVER MISS A BILL</div><h2 id="recurring-modal-title">Add recurring bill</h2><p class="modal-intro">Track an upcoming monthly payment or subscription.</p>
+        <label>Name<input id="recurring-name" type="text" maxlength="50" placeholder="e.g. Internet" required></label>
+        <div class="form-row"><label>Amount<input id="recurring-amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></label><label>Category<select id="recurring-category" required></select></label></div>
+        <label>Next due date<input id="recurring-date" type="date" required></label>
+        <div class="modal-actions"><button class="button button-secondary" type="button" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Add bill</button></div>
+      </form>
+    </div>
+
+    <div class="modal-backdrop hidden" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+      <canvas class="auth-visualization" id="auth-visualization" aria-hidden="true"></canvas>
+      <section class="auth-story" aria-label="Financial Report overview">
+        <div class="auth-story-eyebrow"><span></span> YOUR MONEY, IN FOCUS</div>
+        <h1>Your finances, clearly in view.</h1>
+        <p>Tools to understand your money, stay on budget, and make informed decisions.</p>
+        <ul class="auth-feature-list">
+          <li><span class="auth-feature-icon" aria-hidden="true">↕</span><div><strong>Income and expense management</strong><small>Add, edit, delete, and search transactions.</small></div></li>
+          <li><span class="auth-feature-icon" aria-hidden="true">◒</span><div><strong>Analytics dashboard</strong><small>Visualize spending trends, category breakdowns, and monthly comparisons.</small></div></li>
+          <li><span class="auth-feature-icon" aria-hidden="true">◎</span><div><strong>Budget management</strong><small>Set spending limits and receive budget alerts.</small></div></li>
+          <li><span class="auth-feature-icon" aria-hidden="true">↓</span><div><strong>Reports and exports</strong><small>Filter transactions and export financial reports to CSV.</small></div></li>
+        </ul>
+      </section>
+      <form class="modal-card auth-card" id="auth-form">
+        <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+        <div class="auth-brand"><span class="brand-mark"><svg class="brand-fallback" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 26.5h22" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><rect x="7" y="17" width="4" height="8" rx="1" fill="currentColor"/><rect x="14" y="12" width="4" height="13" rx="1" fill="currentColor"/><rect x="21" y="7" width="4" height="18" rx="1" fill="currentColor"/><path d="m8 14 7-5 6 1 5-5" fill="none" stroke="var(--surface)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><canvas class="brand-scene" data-three-logo aria-hidden="true"></canvas></span><span>Financial Report<span class="brand-period">.</span></span></div>
+        <div class="eyebrow">YOUR PRIVATE WORKSPACE</div><h2 id="auth-title">Welcome back</h2><p class="modal-intro" id="auth-intro">Sign in to your local Financial Report workspace.</p>
+        <label class="auth-name-field hidden" id="auth-name-field">Your name<input id="auth-name" type="text" maxlength="48" placeholder="Enter Name"></label>
+        <label>Email<input id="auth-email" type="email" autocomplete="username" placeholder="Email Address" required></label>
+        <label>Password<input id="auth-password" type="password" autocomplete="current-password" minlength="8" placeholder="Enter password" required></label>
+        <p class="security-note">Prototype note: your account is stored only in this browser. This is not production-secure authentication.</p>
+        <p class="form-error hidden" id="auth-error" role="alert"></p>
+        <div class="modal-actions"><button class="button button-secondary" type="button" id="auth-mode-toggle">Create account</button><button class="button button-primary" type="submit" id="auth-submit">Sign in</button></div>
+      </form>
+    </div>
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+  </body>
+</html>
+three
